@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <title>Task</title>
-  <meta charset="UTF-8">.
+  <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href=
@@ -14,8 +14,18 @@
 <body>
   <div class="wrapper">
     <div class="container">
+      <div id="newtag">
+        <input id="create-tag" onkeyup="findData()" placeholder="Enter what you want to find" type=
+        "text">
+      </div><select id="select" multiple>
+      </select>
     </div>
+    <table id="table">
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="profile"></div>
   </div>
-  <script src="script.js"></script>
+  <script src="script.js">
+  </script>
 </body>
 </html>
