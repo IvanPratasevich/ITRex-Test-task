@@ -105,3 +105,10 @@ tr:hover td {
   font-size: 20px;
   margin-bottom: 10px;
 }
+#select{
+    border: 2px solid #D1D3D4;
+}
+#select:focus {
+  outline: none;
+  border-color: #4CB8C4;
+}
