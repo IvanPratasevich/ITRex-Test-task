@@ -125,7 +125,7 @@ tr:hover td {
   background-position: center;
   background-size: cover;
   float: left;
-  margin: 2px 5px 0 0;
+  margin-right: 5px;
   width: 25px;
   height: 25px;
 }
