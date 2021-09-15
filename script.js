@@ -6,10 +6,12 @@ let states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "HI", "IA", 
 let counterForSortByColumns = 1;
 let counterForSortByColumnsFirstName = 2;
 let counterForSortByColumnsLastName = 2;
-let counter = 0;
+let counterForSortByColumnsEmail = 2;
+let counterForSortByColumnsPhone = 2;
+let counterForSortByColumnsState = 2;
 let select = document.getElementById('select')
 //Receiving data from the server 
-function getData(counter) {
+function getData() {
   let url = 'https://itrex-react-lab-files.s3.eu-central-1.amazonaws.com/react-test-api.json';
   let data = [];
   fetch(url).then(function(response) {
@@ -24,21 +26,15 @@ function getData(counter) {
 function init() {
   select.innerHTML +=
     `
-            <option selected="selected" value="0">Filter by state</option>
+            <option selected="selected" disabled value="0">Filter by state</option>
+            <option  value="0">All States</option>
        `;
   states.forEach(function(item, i, arr) {
     select.innerHTML += `
           <option value="${item}">${item}</option>
         `;
   });
-  if (JSON.parse(localStorage.getItem('counter')) === null) {
-    counter += 1;
-    localStorage.setItem('counter', JSON.stringify(counter));
-    getData(counter)
-  } else {
-    console.log('The data was downloaded from the server once');
-    createTable()
-  }
+  getData()
 }
 
 function createTable() {
@@ -49,9 +45,9 @@ function createTable() {
         <th class="tdHeader" onclick='sortByColumns()' id='id'>Id&#9650</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader">Email</th>
-        <th class="tdHeader">Phone</th>
-        <th class="tdHeader">State</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
   data.sort((a, b) => a.id - b.id);
@@ -107,7 +103,6 @@ function getAdditionalInformation(element) {
   let elementId = element.dataset.indexNumber;
   let profile = document.getElementById("profile");
   let findUser = Array.from(data).find(item => item.id == elementId);
-  console.log(findUser.firstName)
   profile.innerHTML =
     `
       <h1 class="profile-title">Profile info:</h1><br>
@@ -144,7 +139,8 @@ document.getElementById('select').addEventListener('change', function() {
     });
   }
 })
-function sortByColumns(){
+
+function sortByColumns() {
   let data = JSON.parse(localStorage.getItem('data'));
   document.getElementById('tbody').innerHTML =
     `
@@ -152,17 +148,19 @@ function sortByColumns(){
         <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader">Email</th>
-        <th class="tdHeader">Phone</th>
-        <th class="tdHeader">State</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if(counterForSortByColumns % 2 === 0){
+  if (counterForSortByColumns % 2 === 0) {
     data.sort((a, b) => a.id - b.id);
-    document.getElementById('id').innerHTML = `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
-  } else{
+    document.getElementById('id').innerHTML =
+      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
+  } else {
     data.sort((a, b) => b.id - a.id);
-     document.getElementById('id').innerHTML = `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9660</th>`
+    document.getElementById('id').innerHTML =
+      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9660</th>`
   }
   counterForSortByColumns += 1;
   data.forEach(function(item, i, arr) {
@@ -185,7 +183,8 @@ function sortByColumns(){
         `;
   });
 }
-function sortByColumnsFirstName(){
+
+function sortByColumnsFirstName() {
   let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
@@ -194,17 +193,19 @@ function sortByColumnsFirstName(){
         <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader">Email</th>
-        <th class="tdHeader">Phone</th>
-        <th class="tdHeader">State</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if(counterForSortByColumnsFirstName % 2 === 0){
+  if (counterForSortByColumnsFirstName % 2 === 0) {
     data.sort((a, b) => a.firstName.localeCompare(b.firstName))
-    document.getElementById('firstname').innerHTML = `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650</th>`
-  } else{
+    document.getElementById('firstname').innerHTML =
+      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650</th>`
+  } else {
     data.sort((a, b) => b.firstName.localeCompare(a.firstName))
-    document.getElementById('firstname').innerHTML = `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9660;</th>`
+    document.getElementById('firstname').innerHTML =
+      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9660;</th>`
   }
   counterForSortByColumnsFirstName += 1;
   data.forEach(function(item, i, arr) {
@@ -227,7 +228,8 @@ function sortByColumnsFirstName(){
         `;
   });
 }
-function sortByColumnsLastName(){
+
+function sortByColumnsLastName() {
   let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
@@ -236,17 +238,19 @@ function sortByColumnsLastName(){
         <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader">Email</th>
-        <th class="tdHeader">Phone</th>
-        <th class="tdHeader">State</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if(counterForSortByColumnsLastName % 2 === 0){
+  if (counterForSortByColumnsLastName % 2 === 0) {
     data.sort((a, b) => a.lastName.localeCompare(b.lastName))
-    document.getElementById('lastname').innerHTML = `           <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
-  } else{
+    document.getElementById('lastname').innerHTML =
+      `           <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
+  } else {
     data.sort((a, b) => b.lastName.localeCompare(a.lastName))
-    document.getElementById('lastname').innerHTML = `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9660;</th>`;
+    document.getElementById('lastname').innerHTML =
+      `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9660;</th>`;
   }
   counterForSortByColumnsLastName += 1;
   data.forEach(function(item, i, arr) {
@@ -267,7 +271,140 @@ function sortByColumnsLastName(){
         <td>${state}</td>
       </tr>
         `;
-  });    
+  });
 }
 
+function sortByColumnsEmail() {
+  let data = JSON.parse(localStorage.getItem('data'));
+  let tr = table.getElementsByTagName("tr");
+  document.getElementById('tbody').innerHTML =
+    `
+       <tr>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+        `;
+  if (counterForSortByColumnsEmail % 2 === 0) {
+    data.sort((a, b) => a.email.localeCompare(b.email))
+    document.getElementById('email').innerHTML =
+      `           <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9650;</th>`;
+  } else {
+    data.sort((a, b) => b.email.localeCompare(a.email))
+    document.getElementById('email').innerHTML =
+      `        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9660;</th>`;
+  }
+  counterForSortByColumnsEmail += 1;
+  data.forEach(function(item, i, arr) {
+    let id = item.id;
+    let firstName = item.firstName;
+    let lastName = item.lastName;
+    let email = item.email;
+    let phone = item.phone;
+    let state = item.adress.state;
+    document.getElementById('tbody').innerHTML +=
+      `
+       <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+        <td>${id}</td>
+        <td>${firstName}</td>
+        <td>${lastName}</td>
+        <td>${email}</td>
+        <td>${phone}</td>
+        <td>${state}</td>
+      </tr>
+        `;
+  });
+}
+
+function sortByColumnsPhone() {
+  let data = JSON.parse(localStorage.getItem('data'));
+  document.getElementById('tbody').innerHTML =
+    `
+       <tr>
+        <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+        `;
+  if (counterForSortByColumnsPhone % 2 === 0) {
+    data.sort((a, b) => b.phone.replace(/\D/g, '') - a.phone.replace(/\D/g, ''));
+    document.getElementById('phone').innerHTML =
+      `           <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9650</th>`
+  } else {
+    data.sort((a, b) => a.phone.replace(/\D/g, '') - b.phone.replace(/\D/g, ''));
+    document.getElementById('phone').innerHTML =
+      `<th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9650</th>`
+  }
+  counterForSortByColumnsPhone += 1;
+  data.forEach(function(item, i, arr) {
+    let id = item.id;
+    let firstName = item.firstName;
+    let lastName = item.lastName;
+    let email = item.email;
+    let phone = item.phone;
+    let state = item.adress.state;
+    document.getElementById('tbody').innerHTML +=
+      `
+       <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+        <td>${id}</td>
+        <td>${firstName}</td>
+        <td>${lastName}</td>
+        <td>${email}</td>
+        <td>${phone}</td>
+        <td>${state}</td>
+      </tr>
+        `;
+  });
+}
+
+function sortByColumnsState() {
+  let data = JSON.parse(localStorage.getItem('data'));
+  let tr = table.getElementsByTagName("tr");
+  document.getElementById('tbody').innerHTML =
+    `
+       <tr>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+        `;
+  if (counterForSortByColumnsState % 2 === 0) {
+    data.sort((a, b) => a.adress.state.localeCompare(b.adress.state))
+    document.getElementById('state').innerHTML =
+      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9650</th>`
+  } else {
+    data.sort((a, b) => b.adress.state.localeCompare(a.adress.state))
+    document.getElementById('state').innerHTML =
+      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9660</th>`
+  }
+  counterForSortByColumnsState += 1;
+  data.forEach(function(item, i, arr) {
+    let id = item.id;
+    let firstName = item.firstName;
+    let lastName = item.lastName;
+    let email = item.email;
+    let phone = item.phone;
+    let state = item.adress.state;
+    document.getElementById('tbody').innerHTML +=
+      `
+       <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+        <td>${id}</td>
+        <td>${firstName}</td>
+        <td>${lastName}</td>
+        <td>${email}</td>
+        <td>${phone}</td>
+        <td>${state}</td>
+      </tr>
+        `;
+  });
+}
 init()
