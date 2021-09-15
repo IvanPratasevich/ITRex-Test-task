@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 body {
   background: #4CB8C4;
   background: -webkit-linear-gradient(to right, #3CD3AD, #4CB8C4);

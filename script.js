@@ -42,7 +42,7 @@ function createTable() {
   document.getElementById('tbody').innerHTML +=
     `
        <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id&#9650</th>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id&#9660</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
         <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
@@ -60,15 +60,15 @@ function createTable() {
     let state = item.adress.state;
     document.getElementById('tbody').innerHTML +=
       `
-       <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
-        <td>${id}</td>
-        <td>${firstName}</td>
-        <td>${lastName}</td>
-        <td>${email}</td>
-        <td>${phone}</td>
-        <td>${state}</td>
-      </tr>
-        `;
+         <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+          <td>${id}</td>
+          <td>${firstName}</td>
+          <td>${lastName}</td>
+          <td>${email}</td>
+          <td>${phone}</td>
+          <td>${state}</td>
+        </tr>
+    `;
   });
 }
 
@@ -99,6 +99,7 @@ function findData() {
 }
 
 function getAdditionalInformation(element) {
+  document.location.href = '#profile';
   let data = JSON.parse(localStorage.getItem('data'));
   let elementId = element.dataset.indexNumber;
   let profile = document.getElementById("profile");
@@ -156,11 +157,11 @@ function sortByColumns() {
   if (counterForSortByColumns % 2 === 0) {
     data.sort((a, b) => a.id - b.id);
     document.getElementById('id').innerHTML =
-      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
+      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9660</th>`
   } else {
     data.sort((a, b) => b.id - a.id);
     document.getElementById('id').innerHTML =
-      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9660</th>`
+      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
   }
   counterForSortByColumns += 1;
   data.forEach(function(item, i, arr) {
@@ -198,14 +199,14 @@ function sortByColumnsFirstName() {
         <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if (counterForSortByColumnsFirstName % 2 === 0) {
+  if (counterForSortByColumnsFirstName % 2 !== 0) {
     data.sort((a, b) => a.firstName.localeCompare(b.firstName))
     document.getElementById('firstname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650</th>`
+      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9660</th>`
   } else {
     data.sort((a, b) => b.firstName.localeCompare(a.firstName))
     document.getElementById('firstname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9660;</th>`
+      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650;</th>`
   }
   counterForSortByColumnsFirstName += 1;
   data.forEach(function(item, i, arr) {
@@ -243,14 +244,14 @@ function sortByColumnsLastName() {
         <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if (counterForSortByColumnsLastName % 2 === 0) {
+  if (counterForSortByColumnsLastName % 2 !== 0) {
     data.sort((a, b) => a.lastName.localeCompare(b.lastName))
     document.getElementById('lastname').innerHTML =
-      `           <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
+      `           <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9660;</th>`;
   } else {
     data.sort((a, b) => b.lastName.localeCompare(a.lastName))
     document.getElementById('lastname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9660;</th>`;
+      `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
   }
   counterForSortByColumnsLastName += 1;
   data.forEach(function(item, i, arr) {
@@ -288,14 +289,14 @@ function sortByColumnsEmail() {
         <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if (counterForSortByColumnsEmail % 2 === 0) {
+  if (counterForSortByColumnsEmail % 2 !== 0) {
     data.sort((a, b) => a.email.localeCompare(b.email))
     document.getElementById('email').innerHTML =
-      `           <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9650;</th>`;
+      `           <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9660;</th>`;
   } else {
     data.sort((a, b) => b.email.localeCompare(a.email))
     document.getElementById('email').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9660;</th>`;
+      `        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9650;</th>`;
   }
   counterForSortByColumnsEmail += 1;
   data.forEach(function(item, i, arr) {
@@ -339,7 +340,7 @@ function sortByColumnsPhone() {
   } else {
     data.sort((a, b) => a.phone.replace(/\D/g, '') - b.phone.replace(/\D/g, ''));
     document.getElementById('phone').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9650</th>`
+      `<th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9660</th>`
   }
   counterForSortByColumnsPhone += 1;
   data.forEach(function(item, i, arr) {
@@ -377,14 +378,14 @@ function sortByColumnsState() {
         <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  if (counterForSortByColumnsState % 2 === 0) {
+  if (counterForSortByColumnsState % 2 !== 0) {
     data.sort((a, b) => a.adress.state.localeCompare(b.adress.state))
     document.getElementById('state').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9650</th>`
+      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9660</th>`
   } else {
     data.sort((a, b) => b.adress.state.localeCompare(a.adress.state))
     document.getElementById('state').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9660</th>`
+      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9650</th>`
   }
   counterForSortByColumnsState += 1;
   data.forEach(function(item, i, arr) {
