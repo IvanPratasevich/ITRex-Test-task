@@ -22,11 +22,11 @@ let findUsers = [];
 //Receiving data from the server 
 function getData() {
   let url = 'https://itrex-react-lab-files.s3.eu-central-1.amazonaws.com/react-test-api.json';
-  let data = [];
+  let dataFromServer = [];
   fetch(url).then(function(response) {
     return response.json();
   }).then(function(dataServer) {
-    dataServer.forEach(element => data.push(element));
+    dataServer.forEach(element => dataFromServer.push(element));
     localStorage.setItem('data', JSON.stringify(data));
     createTable()
   })
