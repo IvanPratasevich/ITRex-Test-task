@@ -3,6 +3,11 @@ let states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "HI", "IA", 
   "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA",
   "WI", "WV", "WY"
 ]
+let page = 1;
+let table = document.getElementById("tbody");
+let tr = table.getElementsByTagName("tr");
+let array;
+let data = JSON.parse(localStorage.getItem('data'));
 let counterForSortByColumns = 1;
 let counterForSortByColumnsFirstName = 2;
 let counterForSortByColumnsLastName = 2;
@@ -10,6 +15,7 @@ let counterForSortByColumnsEmail = 2;
 let counterForSortByColumnsPhone = 2;
 let counterForSortByColumnsState = 2;
 let select = document.getElementById('select')
+let findUsers = [];
 //Receiving data from the server 
 function getData() {
   let url = 'https://itrex-react-lab-files.s3.eu-central-1.amazonaws.com/react-test-api.json';
@@ -38,11 +44,10 @@ function init() {
 }
 
 function createTable() {
-  let data = JSON.parse(localStorage.getItem('data'));
   document.getElementById('tbody').innerHTML +=
     `
        <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id&#9660</th>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
         <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
         <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
         <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
@@ -50,8 +55,31 @@ function createTable() {
         <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
       </tr>
         `;
-  data.sort((a, b) => a.id - b.id);
-  data.forEach(function(item, i, arr) {
+  console.log(page)
+  switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -76,8 +104,6 @@ function findData() {
   let flag;
   let input = document.getElementById("create-tag");
   let filter = input.value.toUpperCase();
-  let table = document.getElementById("tbody");
-  let tr = table.getElementsByTagName("tr");
   Array.from(tr).forEach(function(item, i, arr) {
     if (i == 0) {
       return
@@ -100,7 +126,6 @@ function findData() {
 
 function getAdditionalInformation(element) {
   document.location.href = '#profile';
-  let data = JSON.parse(localStorage.getItem('data'));
   let elementId = element.dataset.indexNumber;
   let profile = document.getElementById("profile");
   let findUser = Array.from(data).find(item => item.id == elementId);
@@ -122,27 +147,57 @@ document.getElementById('select').addEventListener('change', function() {
   let table = document.getElementById("tbody");
   let tr = table.getElementsByTagName("tr");
   let states = [];
-  Array.from(tr).forEach(function(item, i, arr) {
-    td = tr[i].getElementsByTagName("td")[5];
-    if (td) {
-      value = td.innerHTML;
-      states.push(value)
-      if (value.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }
+  findUsers = data.filter(item => item.adress.state === filter);
+  document.getElementById('tbody').innerHTML= '';
+    document.getElementById('tbody').innerHTML +=
+    `
+       <tr>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+        `;
+  findUsers.forEach(function(item, i, arr) {
+    console.log(item)
+    let id = item.id;
+    let firstName = item.firstName;
+    let lastName = item.lastName;
+    let email = item.email;
+    let phone = item.phone;
+    let state = item.adress.state;
+    document.getElementById('tbody').innerHTML +=
+      `
+       <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+        <td>${id}</td>
+        <td>${firstName}</td>
+        <td>${lastName}</td>
+        <td>${email}</td>
+        <td>${phone}</td>
+        <td>${state}</td>
+      </tr>
+        `;
   });
+  document.getElementById('pages').innerHTML= '';
   if (filter == 0) {
-    Array.from(tr).forEach(function(item, i, arr) {
-      tr[i].style.display = "";
-    });
+  document.getElementById('tbody').innerHTML= '';
+    createTable()
+  document.getElementById('pages').innerHTML +=
+    `
+      <button class="btn active" onclick="changePage(this)">1</button>
+      <button class="btn" onclick="changePage(this)">2</button>
+      <button class="btn" onclick="changePage(this)">3</button>
+      <button class="btn" onclick="changePage(this)">4</button>
+      <button class="btn" onclick="changePage(this)">5</button>
+      <button class="btn" onclick="changePage(this)">6</button>
+        `;
   }
+
 })
 
 function sortByColumns() {
-  let data = JSON.parse(localStorage.getItem('data'));
   document.getElementById('tbody').innerHTML =
     `
        <tr>
@@ -164,7 +219,30 @@ function sortByColumns() {
       `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
   }
   counterForSortByColumns += 1;
-  data.forEach(function(item, i, arr) {
+  switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -186,7 +264,6 @@ function sortByColumns() {
 }
 
 function sortByColumnsFirstName() {
-  let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
     `
@@ -209,7 +286,30 @@ function sortByColumnsFirstName() {
       `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650;</th>`
   }
   counterForSortByColumnsFirstName += 1;
-  data.forEach(function(item, i, arr) {
+    switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -231,7 +331,6 @@ function sortByColumnsFirstName() {
 }
 
 function sortByColumnsLastName() {
-  let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
     `
@@ -254,7 +353,30 @@ function sortByColumnsLastName() {
       `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
   }
   counterForSortByColumnsLastName += 1;
-  data.forEach(function(item, i, arr) {
+  switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -276,7 +398,6 @@ function sortByColumnsLastName() {
 }
 
 function sortByColumnsEmail() {
-  let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
     `
@@ -299,7 +420,30 @@ function sortByColumnsEmail() {
       `        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9650;</th>`;
   }
   counterForSortByColumnsEmail += 1;
-  data.forEach(function(item, i, arr) {
+  switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -321,7 +465,6 @@ function sortByColumnsEmail() {
 }
 
 function sortByColumnsPhone() {
-  let data = JSON.parse(localStorage.getItem('data'));
   document.getElementById('tbody').innerHTML =
     `
        <tr>
@@ -343,7 +486,30 @@ function sortByColumnsPhone() {
       `<th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9660</th>`
   }
   counterForSortByColumnsPhone += 1;
-  data.forEach(function(item, i, arr) {
+    switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -365,7 +531,6 @@ function sortByColumnsPhone() {
 }
 
 function sortByColumnsState() {
-  let data = JSON.parse(localStorage.getItem('data'));
   let tr = table.getElementsByTagName("tr");
   document.getElementById('tbody').innerHTML =
     `
@@ -388,7 +553,30 @@ function sortByColumnsState() {
       `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9650</th>`
   }
   counterForSortByColumnsState += 1;
-  data.forEach(function(item, i, arr) {
+  switch (page) {
+    case 1:
+      array = data.slice(0,20);
+      break;
+    case 2:
+      array = data.slice(20,40);
+      break;
+    case 3:
+      array = data.slice(40,60);
+      break;
+    case 4:
+      array = data.slice(60,80);
+      break;
+    case 5:
+      array = data.slice(80,100);
+      break;
+    case 6:
+      array = data.slice(100,120);
+      break;
+    default:
+      // statements_def
+      break;
+  }
+  array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -407,5 +595,16 @@ function sortByColumnsState() {
       </tr>
         `;
   });
+}
+function changePage(btn){
+  let table = document.getElementById('tbody');
+  table.innerHTML = '';
+  page = Number(btn.innerHTML);
+  let buttons = document.querySelectorAll(".btn");
+  for (let button of buttons) {
+    buttons.forEach(element => element.classList.remove('active'));
+    btn.classList.toggle('active');  
+  }
+  createTable();
 }
 init()

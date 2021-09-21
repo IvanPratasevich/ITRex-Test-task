@@ -129,3 +129,26 @@ tr:hover td {
   width: 25px;
   height: 25px;
 }
+.pages{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+  width: 20%;
+  background-color: white;
+  align-self: center;
+  padding: 20px;
+  min-height: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 15px 30px rgb(0 0 0 / 30%);
+}
+.btn{
+  border: 1px solid gray;
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+  border-radius: 5px;
+}
+.active{
+  background-color: gray;
+  color: white;
+}
