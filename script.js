@@ -10,7 +10,6 @@ let array;
 let desk = '';
 let sortA = '';
 let sortB = '';
-let data = JSON.parse(localStorage.getItem('data'));
 let counterForSortByColumns = 1;
 let counterForSortByColumnsFirstName = 2;
 let counterForSortByColumnsLastName = 2;
@@ -19,6 +18,9 @@ let counterForSortByColumnsPhone = 2;
 let counterForSortByColumnsState = 2;
 let select = document.getElementById('select')
 let findUsers = [];
+let data;
+
+
 //Receiving data from the server 
 function getData() {
   let url = 'https://itrex-react-lab-files.s3.eu-central-1.amazonaws.com/react-test-api.json';
@@ -27,7 +29,8 @@ function getData() {
     return response.json();
   }).then(function(dataServer) {
     dataServer.forEach(element => dataFromServer.push(element));
-    localStorage.setItem('data', JSON.stringify(data));
+    localStorage.setItem('data', JSON.stringify(dataFromServer));
+    createData(dataFromServer)
     createTable()
   })
 }
@@ -45,9 +48,11 @@ function init() {
   });
   getData()
 }
+function createData () {
+  data = JSON.parse(localStorage.getItem('data'));
+}
 
 function createTable() {
-  console.log(page)
   switch (page) {
     case 1:
       array = data.slice(0,20);
@@ -134,6 +139,22 @@ function getAdditionalInformation(element) {
 }
 document.getElementById('select').addEventListener('change', function() {
   data = JSON.parse(localStorage.getItem('data'));
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
   let flag;
   let input = document.getElementById("create-tag");
   let filter = this.value.toUpperCase();
@@ -142,8 +163,6 @@ document.getElementById('select').addEventListener('change', function() {
   let states = [];
   findUsers = data.filter(item => item.adress.state === filter);
   document.getElementById('tbody').innerHTML= '';
-  data = [];
-  data = findUsers;
   findUsers.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -163,6 +182,7 @@ document.getElementById('select').addEventListener('change', function() {
       </tr>
         `;
   });
+  data = findUsers;
   document.getElementById('pages').innerHTML= '';
   if (filter == 0) {
   data = JSON.parse(localStorage.getItem('data'));
