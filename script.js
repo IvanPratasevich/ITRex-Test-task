@@ -53,6 +53,7 @@ function createData () {
 }
 
 function createTable() {
+  console.log(page)
   switch (page) {
     case 1:
       array = data.slice(0,20);
@@ -71,6 +72,9 @@ function createTable() {
       break;
     case 6:
       array = data.slice(100,120);
+      break;
+    case 999:
+      array = data.slice();
       break;
     default:
       // statements_def
@@ -98,20 +102,55 @@ function createTable() {
 }
 
 function findData() {
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
   let flag;
+  let trData = table.getElementsByTagName("tr");
   let input = document.getElementById("create-tag");
   let filter = input.value.toUpperCase();
-  Array.from(tr).forEach(function(item, i, arr) {
-    if (i == 0) {
-      return
-    } else {
+  document.getElementById('tbody').innerHTML = "";
+  document.getElementById('pages').innerHTML = "";
+data.forEach(function(item, i, arr) {
+    let id = item.id;
+    let firstName = item.firstName;
+    let lastName = item.lastName;
+    let email = item.email;
+    let phone = item.phone;
+    let state = item.adress.state;
+    document.getElementById('tbody').innerHTML +=
+      `
+         <tr onclick="return getAdditionalInformation(this);" data-index-number="${id}">
+          <td>${id}</td>
+          <td>${firstName}</td>
+          <td>${lastName}</td>
+          <td>${email}</td>
+          <td>${phone}</td>
+          <td>${state}</td>
+        </tr>
+    `;
+  });
+  Array.from(trData).forEach(function(item, i, arr) {
+ 
       let td = item.getElementsByTagName("td");
       Array.from(td).forEach(function(item, i, arr) {
         if (item.innerHTML.toUpperCase().indexOf(filter) > -1) {
           flag = true;
         }
       });
-    }
+    
     if (flag) {
       item.style.display = "";
       flag = false;
@@ -119,6 +158,21 @@ function findData() {
       item.style.display = "none";
     }
   });
+  if(filter === ""){
+    page = 1;
+    document.getElementById('tbody').innerHTML = "";
+    document.getElementById('pages').innerHTML = "";
+    createTable();
+    document.getElementById('pages').innerHTML =
+      `
+      <button class="btn active" onclick="changePage(this)">1</button>
+      <button class="btn" onclick="changePage(this)">2</button>
+      <button class="btn" onclick="changePage(this)">3</button>
+      <button class="btn" onclick="changePage(this)">4</button>
+      <button class="btn" onclick="changePage(this)">5</button>
+      <button class="btn" onclick="changePage(this)">6</button>
+    `;
+  }
 }
 
 function getAdditionalInformation(element) {
