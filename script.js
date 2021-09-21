@@ -7,6 +7,9 @@ let page = 1;
 let table = document.getElementById("tbody");
 let tr = table.getElementsByTagName("tr");
 let array;
+let desk = '';
+let sortA = '';
+let sortB = '';
 let data = JSON.parse(localStorage.getItem('data'));
 let counterForSortByColumns = 1;
 let counterForSortByColumnsFirstName = 2;
@@ -44,17 +47,6 @@ function init() {
 }
 
 function createTable() {
-  document.getElementById('tbody').innerHTML +=
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
   console.log(page)
   switch (page) {
     case 1:
@@ -141,6 +133,7 @@ function getAdditionalInformation(element) {
         `;
 }
 document.getElementById('select').addEventListener('change', function() {
+  data = JSON.parse(localStorage.getItem('data'));
   let flag;
   let input = document.getElementById("create-tag");
   let filter = this.value.toUpperCase();
@@ -149,19 +142,9 @@ document.getElementById('select').addEventListener('change', function() {
   let states = [];
   findUsers = data.filter(item => item.adress.state === filter);
   document.getElementById('tbody').innerHTML= '';
-    document.getElementById('tbody').innerHTML +=
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+  data = [];
+  data = findUsers;
   findUsers.forEach(function(item, i, arr) {
-    console.log(item)
     let id = item.id;
     let firstName = item.firstName;
     let lastName = item.lastName;
@@ -182,7 +165,20 @@ document.getElementById('select').addEventListener('change', function() {
   });
   document.getElementById('pages').innerHTML= '';
   if (filter == 0) {
+  data = JSON.parse(localStorage.getItem('data'));
   document.getElementById('tbody').innerHTML= '';
+  document.getElementById('header').innerHTML= '';
+  document.getElementById('header').innerHTML +=
+    `
+     <tr>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+        `;
     createTable()
   document.getElementById('pages').innerHTML +=
     `
@@ -198,25 +194,32 @@ document.getElementById('select').addEventListener('change', function() {
 })
 
 function sortByColumns() {
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+
   if (counterForSortByColumns % 2 === 0) {
     data.sort((a, b) => a.id - b.id);
-    document.getElementById('id').innerHTML =
-      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9660</th>`
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.add("sortA");
   } else {
     data.sort((a, b) => b.id - a.id);
-    document.getElementById('id').innerHTML =
-      `   <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id&#9650</th>`
+    document.getElementById('id').classList.remove("sortA");
+    document.getElementById('id').classList.add("sortB");
   }
   counterForSortByColumns += 1;
   switch (page) {
@@ -242,6 +245,7 @@ function sortByColumns() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -265,25 +269,32 @@ function sortByColumns() {
 
 function sortByColumnsFirstName() {
   let tr = table.getElementsByTagName("tr");
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+
   if (counterForSortByColumnsFirstName % 2 !== 0) {
     data.sort((a, b) => a.firstName.localeCompare(b.firstName))
-    document.getElementById('firstname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9660</th>`
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.add("sortA");
   } else {
     data.sort((a, b) => b.firstName.localeCompare(a.firstName))
-    document.getElementById('firstname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name&#9650;</th>`
+    document.getElementById('firstname').classList.remove("sortA");
+    document.getElementById('firstname').classList.add("sortB");
   }
   counterForSortByColumnsFirstName += 1;
     switch (page) {
@@ -309,6 +320,7 @@ function sortByColumnsFirstName() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -332,25 +344,32 @@ function sortByColumnsFirstName() {
 
 function sortByColumnsLastName() {
   let tr = table.getElementsByTagName("tr");
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+
   if (counterForSortByColumnsLastName % 2 !== 0) {
     data.sort((a, b) => a.lastName.localeCompare(b.lastName))
-    document.getElementById('lastname').innerHTML =
-      `           <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9660;</th>`;
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.add("sortA");
   } else {
     data.sort((a, b) => b.lastName.localeCompare(a.lastName))
-    document.getElementById('lastname').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name&#9650;</th>`;
+    document.getElementById('lastname').classList.remove("sortA");
+    document.getElementById('lastname').classList.add("sortB");
   }
   counterForSortByColumnsLastName += 1;
   switch (page) {
@@ -376,6 +395,7 @@ function sortByColumnsLastName() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -399,25 +419,32 @@ function sortByColumnsLastName() {
 
 function sortByColumnsEmail() {
   let tr = table.getElementsByTagName("tr");
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+
   if (counterForSortByColumnsEmail % 2 !== 0) {
     data.sort((a, b) => a.email.localeCompare(b.email))
-    document.getElementById('email').innerHTML =
-      `           <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9660;</th>`;
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.add("sortA");
   } else {
     data.sort((a, b) => b.email.localeCompare(a.email))
-    document.getElementById('email').innerHTML =
-      `        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email&#9650;</th>`;
+    document.getElementById('email').classList.remove("sortA");
+    document.getElementById('email').classList.add("sortB");
   }
   counterForSortByColumnsEmail += 1;
   switch (page) {
@@ -443,6 +470,7 @@ function sortByColumnsEmail() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -465,25 +493,32 @@ function sortByColumnsEmail() {
 }
 
 function sortByColumnsPhone() {
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()'  id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+
+
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.remove("sortA");
+
+
   if (counterForSortByColumnsPhone % 2 === 0) {
     data.sort((a, b) => b.phone.replace(/\D/g, '') - a.phone.replace(/\D/g, ''));
-    document.getElementById('phone').innerHTML =
-      `           <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9650</th>`
+    document.getElementById('phone').classList.remove("sortA");
+    document.getElementById('phone').classList.add("sortB");
   } else {
     data.sort((a, b) => a.phone.replace(/\D/g, '') - b.phone.replace(/\D/g, ''));
-    document.getElementById('phone').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone&#9660</th>`
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.add("sortA");
   }
   counterForSortByColumnsPhone += 1;
     switch (page) {
@@ -509,6 +544,7 @@ function sortByColumnsPhone() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;
@@ -532,25 +568,32 @@ function sortByColumnsPhone() {
 
 function sortByColumnsState() {
   let tr = table.getElementsByTagName("tr");
-  document.getElementById('tbody').innerHTML =
-    `
-       <tr>
-        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
-        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
-        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
-        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
-        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
-        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
-      </tr>
-        `;
+    document.getElementById('id').classList.remove("sortB");
+    document.getElementById('id').classList.remove("sortA");
+
+    document.getElementById('firstname').classList.remove("sortB");
+    document.getElementById('firstname').classList.remove("sortA");
+
+    document.getElementById('lastname').classList.remove("sortB");
+    document.getElementById('lastname').classList.remove("sortA");
+
+
+    document.getElementById('email').classList.remove("sortB");
+    document.getElementById('email').classList.remove("sortA");
+
+
+    document.getElementById('phone').classList.remove("sortB");
+    document.getElementById('phone').classList.remove("sortA");
+
+
   if (counterForSortByColumnsState % 2 !== 0) {
     data.sort((a, b) => a.adress.state.localeCompare(b.adress.state))
-    document.getElementById('state').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9660</th>`
+    document.getElementById('state').classList.remove("sortB");
+    document.getElementById('state').classList.add("sortA");
   } else {
     data.sort((a, b) => b.adress.state.localeCompare(a.adress.state))
-    document.getElementById('state').innerHTML =
-      `<th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State&#9650</th>`
+    document.getElementById('state').classList.remove("sortA");
+    document.getElementById('state').classList.add("sortB");
   }
   counterForSortByColumnsState += 1;
   switch (page) {
@@ -576,6 +619,7 @@ function sortByColumnsState() {
       // statements_def
       break;
   }
+  document.getElementById('tbody').innerHTML = "";
   array.forEach(function(item, i, arr) {
     let id = item.id;
     let firstName = item.firstName;

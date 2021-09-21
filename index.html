@@ -22,7 +22,18 @@
       </select>
     </div>
     <table id="table">
-      <tbody id="tbody"></tbody>
+     <thead id="header">
+      <tr>
+        <th class="tdHeader" onclick='sortByColumns()' id='id'>Id</th>
+        <th class="tdHeader" onclick='sortByColumnsFirstName()' id ='firstname'>First name</th>
+        <th class="tdHeader" onclick='sortByColumnsLastName()' id ='lastname'>Last name</th>
+        <th class="tdHeader" onclick='sortByColumnsEmail()' id ='email'>Email</th>
+        <th class="tdHeader" onclick='sortByColumnsPhone()' id ='phone'>Phone</th>
+        <th class="tdHeader" onclick='sortByColumnsState()' id ='state'>State</th>
+      </tr>
+     </thead>
+      <tbody id="tbody">
+      </tbody>
     </table>
     <div class="pages" id="pages">
       <button class="btn active" onclick="changePage(this)">1</button>

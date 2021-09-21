@@ -152,3 +152,11 @@ tr:hover td {
   background-color: gray;
   color: white;
 }
+.sortA:before{
+  content: "\25BC";
+  float: right;
+}
+.sortB:before{
+  content: "\25B2";
+  float: right;
+}
